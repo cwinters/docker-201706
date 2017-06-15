@@ -7,7 +7,7 @@
     <title>What do you need to know about Docker? | Chris Winters | Erie Day of Code 2017</title>
 
     <link rel="stylesheet" href="css/reveal.css">
-    <link rel="stylesheet" href="css/theme/simple.css">
+    <link rel="stylesheet" href="css/theme/beige.css">
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
@@ -22,8 +22,7 @@
     </script>
 
     <style type="text/css">
-      /* ugh, this didn't work... */
-      .noborder section img {
+      .reveal section img {
         border: none;
         background: none;
         box-shadow: none;
@@ -46,15 +45,740 @@
   <p>&nbsp;</p>
   <p><a href="https://twitter.com/cwinters">@cwinters</a>
     <br />
-    Turnitin
-    <br />
+    <a href="https://turnitin.com">
+      <img src="lib/images/turnitin.png" alt="Turnitin logo"
+        width="212" height="70" />
+    </a>
   </p>
-  <img src="lib/images/turnitin.png" alt="Turnitin logo"
-    width="106" height="35" style="border: none" />
 </section>
 
+<section>
+
+<h2>What are we going to do?</h2>
+
+<ul>
+<li>This is not a Docker tutorial</li>
+<li>You don't need to to know anything about Docker</li>
+<li>My aim: convey Docker's powerful view of the world</li>
+<li>...and why that's useful for you</li>
+</ul>
+
+</section>
 
 <section>
+
+<h2>Up front: here's why</h2>
+
+<ul>
+<li>Docker lets you name and share things you build</li>
+<li>Docker runtime constraints move you to 12 Factor thinking</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Hard problems</h2>
+
+<p align="left">
+  There are two hard problems in computer science:
+  <br />
+  - Naming things
+  <br />
+  - Cache invalidation
+  <br />
+  <br />
+  Phil Karlton
+  (<a href="https://martinfowler.com/bliki/TwoHardThings.html">via Fowler</a>)
+</p>
+
+</section>
+
+<section>
+
+<h2>Naming abstractions is even harder!</h2>
+
+<ul>
+<li>Settled long ago on certain names</li>
+<li>"Save"? "File"? "Copy" and "Paste"?</li>
+<li>Settled on certain abstractions, gave them names</li>
+</ul>
+
+<aside class="notes">
+<ul>
+<li>...put this bag of bits away so I can get it later with a name (yeah, I guess)</li>
+</ul>
+</aside>
+
+</section>
+
+<section>
+
+<p align="center">
+  <img src="lib/images/floppy_save.png"
+    width="240" height="192" border="0"
+    alt="Don't copy that floppy" />
+</p>
+
+<aside class="notes">
+<ul>
+  <li>Some of those names and iconography don't really fit anymore!</li>
+</ul>
+</aside>
+</section>
+
+<section>
+
+<h2>Another naming affordance</h2>
+
+<ul>
+  <li>Developer hedge of "Tags"</li>
+</ul>
+
+<aside class="notes">
+<ul>
+<li>Devs lean on 'tags' whenever they're unsure about names</li>
+<li>Hedge against having to give some <em>thing</em> more than one name</li>
+</ul>
+</aside>
+
+</section>
+
+<section>
+
+<h2>Temporal naming displacement</h2>
+
+<p align="center">
+  <img src="lib/images/rick_sebak_king.jpg"
+    width="675" height="488"
+    alt="King Rick" />
+</p>
+
+<p><a href="https://www.pghcitypaper.com/Blogh/archives/2017/03/29/wqeds-rick-sebak-launches-crowdfunding-campaign/">Source</a>)
+<!--
+(smiley cookie: http://www.smileycookie.com/non-active-holidays/rick-sebak-smiley-cookies-3.html)
+(sandwich photo: http://sandwichweek.pittsburghnorthside.com/CelebrityJudges.aspx)</p>
+-->
+<aside class="notes">
+<ul>
+<li>Rick Sebak is a Pittsburgh documentarian who talks about "Things that used to
+be there", giving homage to the time-honored Pittsburgh tradition of giving
+directions in relation to buildings that used to be there -- "Turn left by
+where the Willy's used to be"</li>
+</ul>
+</aside>
+
+</section>
+
+<section>
+
+<h2>Our favorite: the version</h2>
+
+<ul>
+<li>Single name we give our code at a point in time</li>
+<li>Semantic versioning is admirable</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Downfalls of versions</h2>
+
+<ul>
+<li>But what can you <em>do</em> with a version?</li>
+<li>Use it for distribution! And oh we do that...</li>
+<li>Alas, no code is an island...</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>DEPENDENCIES</h2>
+
+<p align="center">
+  <img src="lib/images/JavaComponentDependenciesDiagram.png"
+    width="768" height="521" alt="A lot of Java components" />
+</p>
+
+<p>(<a href="https://zeroturnaround.com/rebellabs/java-build-tools-how-dependency-management-works-with-maven-gradle-and-ant-ivy/">Source</a>)</p>
+
+</section>
+
+<section>
+
+<h2>The dream of integrated software components</h2>
+
+<ul>
+<li>You focus on your problem, plugin the rest</li>
+<li>We're closer to the dream than ever</li>
+<li>NPM, RubyGems, Maven, CPAN, PyPI</li>
+<li>...but</li>
+</ul>
+
+<aside class="notes">
+<ul>
+<li>People have been writing about ISCs for <em>decades</em></li>
+<li>Open source and enterprising hackers building distribution software on top of
+benevolent companies has given us all jobs</li>
+<li>...how many of you would be here if SOP was releasing once a quarter?</li>
+<li>...releasing often lets you experiment</li>
+</ul>
+</aside>
+
+</section>
+
+<section>
+
+<h2>Double-edged sword of easy and frequent</h2>
+
+<ul>
+<li>Easy to version and distribute</li>
+<li>Which lets everyone frequently version and distribute</li>
+<li>All our dependencies do the same</li>
+<li>...and their dependencies, and their dependencies</li>
+</ul>
+
+<aside class="notes">
+<ul>
+<li>...libraries rarely hard pin versions because they don't want to have to
+monitor all of them for bug/security fixes</li>
+</ul>
+</aside>
+
+</section>
+
+<section>
+
+<h2>It feels like...</h2>
+
+<p align="center">
+  <img src="lib/images/cats_playing_ping_pong.gif"
+    width="490" height="368" alt="PING...PONG" />
+</p>
+
+</section>
+
+<section>
+
+<h2>Docker images</h2>
+
+<ul>
+<li>Docker image is the immutable result of a build</li>
+<li>Every one has a unique hash ID (like Git)</li>
+<li>A change to an image makes a new hash ID (like Git)</li>
+<li>One or more unique tags can reference that hash ID (like Git)</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Images are for sharing</h2>
+
+<ul>
+<li>Images are the granularity and means of distribution</li>
+<li><code>docker pull</code> --&gt; Bring an image to me</li>
+<li><code>docker push</code> --&gt; Send an image somewhere else</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>An image is all the code you need</h2>
+
+<ul>
+<li>Your code</li>
+<li>Your dependencies (and theirs)</li>
+<li>Your runtime and supporting libraries</li>
+<li>...and it has a name!</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>What was a version again?</h2>
+
+<ul>
+<li>A version is a concept at a point in time</li>
+<li>...Docker makes that runnable!</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Pull...</h2>
+
+<pre>
+$ docker pull nktpro/swagger-cli:latest
+latest: Pulling from nktpro/swagger-cli
+12b41071e6ce: Already exists
+a3ed95caeb02: Pull complete
+92d79449cdd2: Pull complete
+411450e8f560: Pull complete
+Digest: sha256:204aee80c9111fde723a94b3606061a02fe89743blah...
+Status: Downloaded newer image for nktpro/swagger-cli:latest
+</pre>
+
+</section>
+
+<section>
+
+<h2>...and run</h2>
+
+<pre>
+$ ls
+... swagger.yaml ....
+$ docker run -v $(pwd):/app \
+    nktpro/swagger-cli:latest \
+    validate /app/swagger.yaml
+/app/swagger.yaml is valid
+</pre>
+
+</section>
+
+<section>
+
+<h2>Tell docker to do something</h2>
+
+<pre>
+$ <b>docker run</b> <i>-v $(pwd):/app \
+    nktpro/swagger-cli:latest \
+    validate /app/swagger.yaml</i>
+</pre>
+
+</section>
+
+<section>
+
+<h2>Share our directory with the container</h2>
+
+<pre>
+$ <i>docker run</i> <b>-v $(pwd):/app</b> \
+    <i>nktpro/swagger-cli:latest \
+    validate /app/swagger.yaml</i>
+</pre>
+
+</section>
+
+<section>
+
+<h2>Our lovely name!</h2>
+
+<pre>
+$ <i>docker run -v $(pwd):/app</i> \
+     <b>nktpro/swagger-cli:latest</b> \
+     <i>validate /app/swagger.yaml</i>
+</pre>
+
+</section>
+
+<section>
+
+<h2>Command plus arguments</h2>
+
+<pre>
+$ <i>docker run -v $(pwd):/app \
+    nktpro/swagger-cli:latest</i> \
+    <b>validate /app/swagger.yaml</b>
+</pre>
+
+</section>
+
+<section>
+
+<h2>Things I don't care about anymore</h2>
+
+<ul>
+<li>What language is this tool written in?</li>
+<li>What libraries does it use?</li>
+<li>Does it work with my version of ruby/python/java?</li>
+<li>Do I have to create a gemspec/virtualenv?</li>
+<li>How do I install this container?</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>...but I can find out if I want</h2>
+
+<ul>
+<li>An image is the result of <code>docker build</code></li>
+<li>Build uses a <code>Dockerfile</code></li>
+<li><code>Dockerfile</code> is just text</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Dockerfile for swagger-cli</h2>
+
+<pre>
+FROM mhart/alpine-node:4.2.1
+RUN npm install -g swagger-cli
+ENTRYPOINT ["swagger"]
+</pre>
+
+</section>
+
+<section>
+
+<h2>Dockerfile is instructions</h2>
+
+<ul>
+<li>Install everything you need</li>
+<li>...but you don't have to start from scratch</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>FROM is sharing</h2>
+
+<ul>
+<li>The first line of the <code>Dockerfile</code> is <code>FROM</code></li>
+<li>With another name!</li>
+<li>Someone else has done work for us!</li>
+<li>We can use it AS IS and build on it!</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Rewind a sec... already exists?!</h2>
+
+<pre>
+$ docker pull nktpro/swagger-cli:latest
+latest: Pulling from nktpro/swagger-cli
+12b41071e6ce: Already exists
+...
+</pre>
+
+</section>
+
+<section>
+
+<h2>Remember: every image has a hash</h2>
+
+<ul>
+<li>That image is cached by hash</li>
+<li>That cached image can be shared among multiple images</li>
+<li>For example, multiple images have <code>FROM alpine:3.4</code></li>
+<li>Docker only stores one of them and everyone uses it</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Sharing code and runtime</h2>
+
+<ul>
+<li>What does all this mean?</li>
+<li>You have a way to share your code</li>
+<li>...plus its runtime</li>
+<li>...and allow run as-is or extension</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>This Is Powerful!</h2>
+
+<p align="center">
+  <img src="lib/images/infinite_coffee_table_book.gif"
+    width="400" height="225" alt="Coffee tables!" />
+</p>
+
+</section>
+
+<section>
+
+<h2>Docker containers</h2>
+
+<ul>
+<li>From earlier: Docker <b>image</b> is the result of a build</li>
+<li>Docker <b>container</b> is a running image</li>
+<li>"Can I run more than one container from the same image?"</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Language shift</h2>
+
+<ul>
+<li>Docker <b>container</b> is a process you execute</li>
+<li>"Can I run more than one process from the same binary?"</li>
+<li>Of course!</li>
+</ul>
+
+</section>
+
+<section>
+
+<p align="center">
+  <img src="lib/images/keanu_whoa.gif"
+    width="680" height="410" alt="Whoa" />
+</p>
+
+</section>
+
+<section>
+
+<h2>A container is a running process</h2>
+
+<ul>
+<li>Think of it as a process plus all the stuff it needs to run</li>
+<li>Docker makes this explicit with STD(ERR|IN|OUT)</li>
+<li>But... "needs to run"?</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>What do you need to run?</h2>
+
+<ul>
+<li>Environment</li>
+<li>Network</li>
+<li>STDIN/STDOUT/STDERR</li>
+<li>Storage</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>12 Factor: ?</h2>
+
+<ul>
+  <li>Who knows what 12 Factor apps are?</li>
+  <li>(Generally, this is not a quiz)</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>12 Factor: Really?</h2>
+
+<ul>
+<li>Who is using 12 Factor apps in production?</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Similar to Docker: A way of viewing the world</h2>
+
+<ul>
+<li>Stateless apps</li>
+<li>Configure via environment</li>
+<li>Use stateful services over the network</li>
+<li>Log as stream, not to files</li>
+<li>Others, see <a href="https://12factor.net/">12factor.net</a></li>
+</ul>
+
+<aside class="notes">
+  <ul>
+    <li>From experience starting and running Heroku</li>
+  </ul>
+</aside>
+</section>
+
+<section>
+
+<h2>Luring</h2>
+
+<p align="center">
+<a href="https://twitter.com/littleidea/status/875125224752111617">
+  <img src="lib/images/lure_them_with_deployments.png" 
+    width="800" height="242"
+    alt="'Lure them in with promises of faster deployments, then hammer them with 12 Factor --Verizon'">
+</a>
+</p>
+
+</section>
+
+<section>
+
+<h2>Stateless</h2>
+
+<ul>
+<li>Try your darndest not to need mutable files</li>
+<li>Think about what you're really using that file for</li>
+<li>Can you use a file over the network? (S3)</li>
+<li>Can you use a cache? (Redis, Memcache)</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Environment for configuration</h2>
+
+<ul>
+<li>Might feel very primitive -- simple keys and values????</li>
+<li>You can still have dynamic configuration files</li>
+<li>...just put variances in the environment</li>
+<li>Database, S3, Redis, Email host, Log aggregator, etc</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Stateful services</h2>
+
+<ul>
+<li>Get out of the habit of storing state in-memory</li>
+<li>Even sessions -- load balanced sticky sessions are a crutch</li>
+<li>Connecting to write- and read-databases? Two URLs!</li>
+<li>Change is really, really easy</li>
+</ul>
+
+<aside class="notes">
+  <ul>
+    <li>TTM experience working with Heroku and Redis</li>
+  </ul>
+</aside>
+</section>
+
+<section>
+
+<h2>Logging streams</h2>
+
+<ul>
+<li>A container's STDOUT/STDERR will be that of its running process</li>
+<li>Docker allows you to send that stream somewhere else with log drivers</li>
+<li>You don't have to rely on Docker logging</li>
+<li>Log aggregation services</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>How we log?</h2>
+
+<ul>
+<li>Option 1: Every container sends its logs to aggregator</li>
+<li>Option 2: Containers send their logs to another container, which sends them
+to aggregator</li>
+<li>Hands for 1? 2?</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Log forwarding container</h2>
+
+<ul>
+<li>We use Loggly, but it's a commodity</li>
+<li><code>rsyslog</code> container gets logs from other containers on host</li>
+<li>Forwards over HTTPS to aggregator</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>What this enables</h2>
+
+<ul>
+  <li>Swap out logging containers...</li>
+  <li>...or tee logs to multiple aggregation services</li>
+  <li>...while containers are running, with no changes to them</li>
+  <li>(we might miss one or two messages)</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Other neat things</h2>
+
+<ul>
+<li>Having all backend services on Docker means we can run on one machine</li>
+<li>Deploy different branches of many projects via Slack (and everyone does it!)</li>
+<li>Run full back-end stack on your laptop</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Just operations?</h2>
+
+<p>/snooze Ugh, all this feels like "operational stuff"</p>
+
+<p align="center">
+  <img src="lib/images/wargames_norad_war_room.jpg"
+    width="600" height="326" alt="Best. Movie. Ever." />
+</p>
+
+</section>
+
+<section>
+
+<h2>"Just" operations!</h2>
+
+<p>But it's operational stuff the way unit tests are "quality stuff"</p>
+
+<p align="center">
+  <img src="lib/images/tree_eating_machine.gif"
+    width="274" height="342" alt="O P E R A T I O N S" />
+</p>
+
+</section>
+
+<section>
+
+<h2>Shaping</h2>
+
+<p>It can shape how you think about problems</p>
+
+<p align="center">
+  <img src="lib/images/we_have_bigger_problems.gif"
+    width="500" height="281" alt="All day every day" />
+</p>
+
+</section>
+
+<section>
+
+<h2>Powerful</h2>
+
+<p>That's a powerful thing indeed.</p>
+
+<p align="center">
+  <img src="lib/imates/string_cuts_knife.gif"
+    width="500" height="374" alt="Powerful string!" />
+</p>
+
+</section>
+
+<section>
+
+<h2>Thank you!</h2>
+
+<h3>Chris Winters
+<br />
+<a href="https://twitter.com/cwinters/">@cwinters</a></h3>
 
 </section>
 
