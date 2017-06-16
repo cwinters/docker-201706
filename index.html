@@ -65,7 +65,6 @@
 <li>This is not a Docker tutorial</li>
 <li>You don't need to to know anything about Docker</li>
 <li>My aim: convey Docker's powerful view of the world</li>
-<li>...and why that's useful for you</li>
 </ul>
 
 </section>
@@ -237,15 +236,15 @@ benevolent companies has given us all jobs</li>
 <h2>Easy and frequent has trade-offs</h2>
 
 <ul>
-<li>Easy to version and distribute</li>
-<li>Enables frequent releases</li>
+<li>So easy to version and distribute now!</li>
+<li>So easy to make frequent releases!</li>
 <li>All our dependencies do the same</li>
 <li>...and their dependencies, and their dependencies</li>
 </ul>
 
 <aside class="notes">
  <ul>
-  <li>Story about Dave Rolsky and DateTime and Specio</li>
+  <li>Story about Dave Rolsky and DateTime and SpecIO</li>
   <li>...libraries rarely hard pin versions because they don't want to have to
   monitor all of them for bug/security fixes</li>
 </ul>
@@ -266,6 +265,7 @@ benevolent companies has given us all jobs</li>
 
 <section>
   <h2>There is hope!</h2>
+  <p>Docker images make your version more real</p>
 </section>
 
 <section>
@@ -288,7 +288,7 @@ benevolent companies has given us all jobs</li>
 </section>
 
 <section>
-<h2>What does that look like?</h2>
+<h2>What does a build look like?</h2>
 <pre>
 $ <b>docker build -t docker-presentation .</b>
 Sending build context to Docker daemon 12.42 MB
@@ -341,8 +341,8 @@ Successfully tagged docker-presentation:latest
 <h2>What was a version again?</h2>
 
 <ul>
-<li>A version is a concept at a point in time</li>
-<li>...Docker makes that runnable!</li>
+<li>A version is a name at a point in time</li>
+<li>Docker makes that runnable!</li>
 </ul>
 
 </section>
@@ -412,7 +412,7 @@ $ <i>docker run</i> <b>-v $(pwd):/app</b> \
 
 <section>
 
-<h2>Our lovely name!</h2>
+<h2>A lovely name!</h2>
 
 <pre>
 $ <i>docker run -v $(pwd):/app</i> \
@@ -441,9 +441,9 @@ $ <i>docker run -v $(pwd):/app \
 <ul>
 <li>What language is this tool written in?</li>
 <li>What libraries does it use?</li>
-<li>Does it work with my version of ruby/python/java?</li>
+<li>Does it work with my version of ruby/node/python/java?</li>
 <li>Do I have to create a gemspec/virtualenv?</li>
-<li>How do I install this container?</li>
+<li>Do I need root permissions to install?</li>
 </ul>
 
 </section>
@@ -485,17 +485,33 @@ ENTRYPOINT ["swagger"]</b>
 
 <section>
 
-<h2>FROM is sharing</h2>
+<h2>"FROM" is sharing</h2>
 
 <ul>
 <li>The first line of the <code>Dockerfile</code> is <code>FROM</code></li>
 <li>...with another lovely name!</li>
 <li>Someone else has done work for us!</li>
-<li>We can use it AS IS and build on it!</li>
+<li>We can use it as-is and build on it</li>
 </ul>
 
 </section>
 
+<section>
+<h2>Dockerizing tools and platforms</h2>
+<ul>
+  <li>Someone has probably made an image...</li>
+  <li>...for your runtime</li>
+  <li>...for that app you want to try</li>
+  <li>...for that database you want to play with</li>
+</ul>
+</section>
+
+<aside class="notes">
+  <ul>
+    <li>Examples of learning management systems</li>
+  </ul>
+</aside>
+<!--
 <section>
 
 <h2>Rewind a sec... already exists?!</h2>
@@ -528,6 +544,7 @@ $ docker pull nktpro/swagger-cli:0.0.1
 </aside>
 
 </section>
+-->
 <!--
 <section>
 
@@ -621,7 +638,7 @@ $ docker pull nktpro/swagger-cli:0.0.1
 
 <ul>
 <li>Binary plus all the stuff it needs to run</li>
-<li>Docker makes this explicit with STD(ERR|IN|OUT)</li>
+<li>Docker makes this known with signals and STD(ERR|IN|OUT)</li>
 <li>But... "needs to run"?</li>
 </ul>
 
