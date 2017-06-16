@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>What do you need to know about Docker? | Chris Winters | Erie Day of Code 2017</title>
+    <title>Why should I care about Docker? | Chris Winters | Erie Day of Code 2017</title>
 
     <link rel="stylesheet" href="css/reveal.css">
-    <link rel="stylesheet" href="css/theme/beige.css">
+    <link rel="stylesheet" href="css/theme/solarized.css">
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
@@ -31,6 +31,11 @@
       span.code {
         font-family: Andale Mono, monospace;
         background: #cccccc;
+      }
+
+      .reveal section pre b {
+        font-weight: bold;
+        font-size: 120%;
       }
     </style>
   </head>
@@ -71,7 +76,7 @@
 
 <ul>
 <li>Docker lets you name and share things you build</li>
-<li>Docker runtime constraints move you to 12 Factor thinking</li>
+<li>Docker gently pushes you to 12 Factor thinking</li>
 </ul>
 
 </section>
@@ -99,9 +104,8 @@
 <h2>Naming abstractions is even harder!</h2>
 
 <ul>
-<li>Settled long ago on certain names</li>
-<li>"Save"? "File"? "Copy" and "Paste"?</li>
-<li>Settled on certain abstractions, gave them names</li>
+  <li>"Save"? "File"? "Copy" and "Paste"?</li>
+  <li>Settled on affordances from the real world</li>
 </ul>
 
 <aside class="notes">
@@ -154,7 +158,6 @@
     alt="King Rick" />
 </p>
 
-<p><a href="https://www.pghcitypaper.com/Blogh/archives/2017/03/29/wqeds-rick-sebak-launches-crowdfunding-campaign/">Source</a>)
 <!--
 (smiley cookie: http://www.smileycookie.com/non-active-holidays/rick-sebak-smiley-cookies-3.html)
 (sandwich photo: http://sandwichweek.pittsburghnorthside.com/CelebrityJudges.aspx)</p>
@@ -176,33 +179,33 @@ where the Willy's used to be"</li>
 
 <ul>
 <li>Single name we give our code at a point in time</li>
-<li>Semantic versioning is admirable</li>
+<li>Semantic versioning has... admirable intentions</li>
 </ul>
 
 </section>
 
 <section>
 
-<h2>Downfalls of versions</h2>
+<h2>Limits of versions</h2>
 
 <ul>
-<li>But what can you <em>do</em> with a version?</li>
-<li>Use it for distribution! And oh we do that...</li>
-<li>Alas, no code is an island...</li>
+  <li>Sure, we use it for distribution</li>
+  <li>Alas, no code is an island...</li>
 </ul>
 
+<aside class="notes">
+  <ul>
+    <li>Not dimishing the awesomeness of distribution systems AT ALL</li>
+  </ul>
+</aside>
 </section>
 
 <section>
-
-<h2>DEPENDENCIES</h2>
 
 <p align="center">
   <img src="lib/images/JavaComponentDependenciesDiagram.png"
     width="768" height="521" alt="A lot of Java components" />
 </p>
-
-<p>(<a href="https://zeroturnaround.com/rebellabs/java-build-tools-how-dependency-management-works-with-maven-gradle-and-ant-ivy/">Source</a>)</p>
 
 </section>
 
@@ -214,7 +217,7 @@ where the Willy's used to be"</li>
 <li>You focus on your problem, plugin the rest</li>
 <li>We're closer to the dream than ever</li>
 <li>NPM, RubyGems, Maven, CPAN, PyPI</li>
-<li>...but</li>
+<li>But</li>
 </ul>
 
 <aside class="notes">
@@ -231,19 +234,20 @@ benevolent companies has given us all jobs</li>
 
 <section>
 
-<h2>Double-edged sword of easy and frequent</h2>
+<h2>Easy and frequent has trade-offs</h2>
 
 <ul>
 <li>Easy to version and distribute</li>
-<li>Which lets everyone frequently version and distribute</li>
+<li>Enables frequent releases</li>
 <li>All our dependencies do the same</li>
 <li>...and their dependencies, and their dependencies</li>
 </ul>
 
 <aside class="notes">
-<ul>
-<li>...libraries rarely hard pin versions because they don't want to have to
-monitor all of them for bug/security fixes</li>
+ <ul>
+  <li>Story about Dave Rolsky and DateTime and Specio</li>
+  <li>...libraries rarely hard pin versions because they don't want to have to
+  monitor all of them for bug/security fixes</li>
 </ul>
 </aside>
 
@@ -251,13 +255,17 @@ monitor all of them for bug/security fixes</li>
 
 <section>
 
-<h2>It feels like...</h2>
+<h2>Feels like...</h2>
 
 <p align="center">
   <img src="lib/images/cats_playing_ping_pong.gif"
-    width="490" height="368" alt="PING...PONG" />
+    width="735" height="552" alt="PING...PONG" />
 </p>
 
+</section>
+
+<section>
+  <h2>There is hope!</h2>
 </section>
 
 <section>
@@ -265,12 +273,35 @@ monitor all of them for bug/security fixes</li>
 <h2>Docker images</h2>
 
 <ul>
-<li>Docker image is the immutable result of a build</li>
+<li>Docker image is the result of a build</li>
 <li>Every one has a unique hash ID (like Git)</li>
-<li>A change to an image makes a new hash ID (like Git)</li>
-<li>One or more unique tags can reference that hash ID (like Git)</li>
+<li>Immutable: any change makes a new image (like Git)</li>
+<li><i>n</i> unique tags can reference that hash ID (like Git)</li>
 </ul>
 
+<aside class="notes">
+  <ul>
+    <li>New image, new hash</li>
+  </ul>
+</aside>
+
+</section>
+
+<section>
+<h2>What does that look like?</h2>
+<pre>
+$ <b>docker build -t docker-presentation .</b>
+Sending build context to Docker daemon 12.42 MB
+Step 1/9 : FROM node:8.1.1-alpine
+ ---> a5eecabc2871
+...
+Step 9/9 : CMD grunt serve
+ ---> Running in 8487b99c1063
+ ---> 500d85c44733
+Removing intermediate container 8487b99c1063
+Successfully built 500d85c44733
+Successfully tagged docker-presentation:latest
+</pre>
 </section>
 
 <section>
@@ -283,6 +314,13 @@ monitor all of them for bug/security fixes</li>
 <li><code>docker push</code> --&gt; Send an image somewhere else</li>
 </ul>
 
+<aside class="notes">
+<ul>
+  <li>"Somewhere else" called a container registry</li>
+  <li>Docker has one reference by default</li>
+  <li>Many others exist, and you can run your own</li>
+</ul>
+</aside>
 </section>
 
 <section>
@@ -314,15 +352,22 @@ monitor all of them for bug/security fixes</li>
 <h2>Pull...</h2>
 
 <pre>
-$ docker pull nktpro/swagger-cli:latest
-latest: Pulling from nktpro/swagger-cli
+$ <b>docker pull nktpro/swagger-cli:0.0.1</b>
+0.0.1: Pulling from nktpro/swagger-cli
 12b41071e6ce: Already exists
 a3ed95caeb02: Pull complete
 92d79449cdd2: Pull complete
 411450e8f560: Pull complete
 Digest: sha256:204aee80c9111fde723a94b3606061a02fe89743blah...
-Status: Downloaded newer image for nktpro/swagger-cli:latest
+Status: Downloaded newer image for nktpro/swagger-cli:0.0.1
 </pre>
+
+<aside class="notes">
+  <ul>
+    <li>Each line with a hash is an image</li>
+    <li>And each line with a hash corresponds to a line in your Dockerfile</li>
+  </ul>
+</aside>
 
 </section>
 
@@ -334,7 +379,7 @@ Status: Downloaded newer image for nktpro/swagger-cli:latest
 $ ls
 ... swagger.yaml ....
 $ docker run -v $(pwd):/app \
-    nktpro/swagger-cli:latest \
+    nktpro/swagger-cli:0.0.1 \
     validate /app/swagger.yaml
 /app/swagger.yaml is valid
 </pre>
@@ -347,7 +392,7 @@ $ docker run -v $(pwd):/app \
 
 <pre>
 $ <b>docker run</b> <i>-v $(pwd):/app \
-    nktpro/swagger-cli:latest \
+    nktpro/swagger-cli:0.0.1 \
     validate /app/swagger.yaml</i>
 </pre>
 
@@ -359,7 +404,7 @@ $ <b>docker run</b> <i>-v $(pwd):/app \
 
 <pre>
 $ <i>docker run</i> <b>-v $(pwd):/app</b> \
-    <i>nktpro/swagger-cli:latest \
+    <i>nktpro/swagger-cli:0.0.1 \
     validate /app/swagger.yaml</i>
 </pre>
 
@@ -371,7 +416,7 @@ $ <i>docker run</i> <b>-v $(pwd):/app</b> \
 
 <pre>
 $ <i>docker run -v $(pwd):/app</i> \
-     <b>nktpro/swagger-cli:latest</b> \
+     <b>nktpro/swagger-cli:0.0.1</b> \
      <i>validate /app/swagger.yaml</i>
 </pre>
 
@@ -383,7 +428,7 @@ $ <i>docker run -v $(pwd):/app</i> \
 
 <pre>
 $ <i>docker run -v $(pwd):/app \
-    nktpro/swagger-cli:latest</i> \
+    nktpro/swagger-cli:0.0.1</i> \
     <b>validate /app/swagger.yaml</b>
 </pre>
 
@@ -420,9 +465,9 @@ $ <i>docker run -v $(pwd):/app \
 <h2>Dockerfile for swagger-cli</h2>
 
 <pre>
-FROM mhart/alpine-node:4.2.1
+<b>FROM mhart/alpine-node:4.2.1
 RUN npm install -g swagger-cli
-ENTRYPOINT ["swagger"]
+ENTRYPOINT ["swagger"]</b>
 </pre>
 
 </section>
@@ -432,7 +477,7 @@ ENTRYPOINT ["swagger"]
 <h2>Dockerfile is instructions</h2>
 
 <ul>
-<li>Install everything you need</li>
+<li>Install everything you need to make your code work</li>
 <li>...but you don't have to start from scratch</li>
 </ul>
 
@@ -444,7 +489,7 @@ ENTRYPOINT ["swagger"]
 
 <ul>
 <li>The first line of the <code>Dockerfile</code> is <code>FROM</code></li>
-<li>With another name!</li>
+<li>...with another lovely name!</li>
 <li>Someone else has done work for us!</li>
 <li>We can use it AS IS and build on it!</li>
 </ul>
@@ -456,9 +501,9 @@ ENTRYPOINT ["swagger"]
 <h2>Rewind a sec... already exists?!</h2>
 
 <pre>
-$ docker pull nktpro/swagger-cli:latest
-latest: Pulling from nktpro/swagger-cli
-12b41071e6ce: Already exists
+$ docker pull nktpro/swagger-cli:0.0.1
+0.0.1: Pulling from nktpro/swagger-cli
+<b>12b41071e6ce: Already exists</b>
 ...
 </pre>
 
@@ -469,23 +514,49 @@ latest: Pulling from nktpro/swagger-cli
 <h2>Remember: every image has a hash</h2>
 
 <ul>
-<li>That image is cached by hash</li>
-<li>That cached image can be shared among multiple images</li>
-<li>For example, multiple images have <code>FROM alpine:3.4</code></li>
+<li>That image is cached (by hash ID)</li>
+<li>All of its intermediate images are also cached</li>
+<li>Multiple images have <code>FROM alpine:3.6</code></li>
 <li>Docker only stores one of them and everyone uses it</li>
 </ul>
+
+<aside class="notes">
+  <ul>
+    <li>This only works because images are immutable</li>
+    <li>...unlike git, there is no rebasing ;-P
+  </ul>
+</aside>
+
+</section>
+<!--
+<section>
+
+  <p align="center">
+    <img src="lib/images/cached_images.png"
+      width="650" height="572" alt="Cached images" />
+  </p>
 
 </section>
 
 <section>
 
-<h2>Sharing code and runtime</h2>
+  <p align="center">
+    <img src="lib/images/extended_images.png"
+      width="637" height="275" alt="Extending images" />
+  </p>
+
+</section>
+-->
+<section>
+
+<h2>What does all this mean?</h2>
 
 <ul>
-<li>What does all this mean?</li>
 <li>You have a way to share your code</li>
-<li>...plus its runtime</li>
-<li>...and allow run as-is or extension</li>
+<li class="fragment fade-in">...plus its runtime</li>
+<li class="fragment fade-in">...plus its dependencies</li>
+<li class="fragment fade-in">...and enable running as-is or extension</li>
+<li class="fragment fade-in">...from any machine on the internet</li>
 </ul>
 
 </section>
@@ -496,19 +567,29 @@ latest: Pulling from nktpro/swagger-cli
 
 <p align="center">
   <img src="lib/images/infinite_coffee_table_book.gif"
-    width="400" height="225" alt="Coffee tables!" />
+    width="800" height="450" alt="Coffee tables!" />
 </p>
 
 </section>
 
 <section>
+  <h2>But is it really running the same thing?</h2>
 
-<h2>Docker containers</h2>
+  <ul>
+    <li>Deterministic but not perfect</li>
+    <li>What still varies?</li>
+    <li class="fragment fade-in">Your Environment</li>
+  </ul>
+</section>
+
+<section>
+
+<h2>Enter Docker containers</h2>
 
 <ul>
-<li>From earlier: Docker <b>image</b> is the result of a build</li>
+<li>Docker <b>image</b> is the result of a build</li>
 <li>Docker <b>container</b> is a running image</li>
-<li>"Can I run more than one container from the same image?"</li>
+<li class="fragment fade-in">"Can I run more than one container from the same image?"</li>
 </ul>
 
 </section>
@@ -518,8 +599,8 @@ latest: Pulling from nktpro/swagger-cli
 <h2>Language shift</h2>
 
 <ul>
-<li>Docker <b>container</b> is a process you execute</li>
-<li>"Can I run more than one process from the same binary?"</li>
+<li>Docker <b>container</b> is a binary you execute</li>
+<li>"Can I run more than one process from a binary?"</li>
 <li>Of course!</li>
 </ul>
 
@@ -539,7 +620,7 @@ latest: Pulling from nktpro/swagger-cli
 <h2>A container is a running process</h2>
 
 <ul>
-<li>Think of it as a process plus all the stuff it needs to run</li>
+<li>Binary plus all the stuff it needs to run</li>
 <li>Docker makes this explicit with STD(ERR|IN|OUT)</li>
 <li>But... "needs to run"?</li>
 </ul>
@@ -560,22 +641,16 @@ latest: Pulling from nktpro/swagger-cli
 </section>
 
 <section>
+  <h2>Enter 12 Factor</h2>
+</section>
 
+<section>
 <h2>12 Factor: ?</h2>
 
 <ul>
   <li>Who knows what 12 Factor apps are?</li>
-  <li>(Generally, this is not a quiz)</li>
-</ul>
-
-</section>
-
-<section>
-
-<h2>12 Factor: Really?</h2>
-
-<ul>
-<li>Who is using 12 Factor apps in production?</li>
+  <li class="fragment fade-in">(Generally, this is not a quiz)</li>
+  <li class="fragment fade-in">Who is using 12 Factor apps in production?</li>
 </ul>
 
 </section>
@@ -585,11 +660,11 @@ latest: Pulling from nktpro/swagger-cli
 <h2>Similar to Docker: A way of viewing the world</h2>
 
 <ul>
-<li>Stateless apps</li>
-<li>Configure via environment</li>
-<li>Use stateful services over the network</li>
-<li>Log as stream, not to files</li>
-<li>Others, see <a href="https://12factor.net/">12factor.net</a></li>
+<li>6. Stateless processes</li>
+<li>3. Configure via environment</li>
+<li>4. Use stateful services over the network</li>
+<li>11. Log as stream, not to files</li>
+<li>Others are great too! See <a href="https://12factor.net/">12factor.net</a></li>
 </ul>
 
 <aside class="notes">
@@ -631,9 +706,9 @@ latest: Pulling from nktpro/swagger-cli
 <h2>Environment for configuration</h2>
 
 <ul>
-<li>Might feel very primitive -- simple keys and values????</li>
+<li>Feels stone age</li>
 <li>You can still have dynamic configuration files</li>
-<li>...just put variances in the environment</li>
+<li>...just put <b>variances</b> in the environment</li>
 <li>Database, S3, Redis, Email host, Log aggregator, etc</li>
 </ul>
 
@@ -645,9 +720,9 @@ latest: Pulling from nktpro/swagger-cli
 
 <ul>
 <li>Get out of the habit of storing state in-memory</li>
-<li>Even sessions -- load balanced sticky sessions are a crutch</li>
-<li>Connecting to write- and read-databases? Two URLs!</li>
-<li>Change is really, really easy</li>
+<li>Sessions: load balanced sticky sessions are a crutch</li>
+<li>Write- and read-databases? Two URLs!</li>
+<li>With config via ENV change is really, really easy</li>
 </ul>
 
 <aside class="notes">
@@ -662,10 +737,10 @@ latest: Pulling from nktpro/swagger-cli
 <h2>Logging streams</h2>
 
 <ul>
-<li>A container's STDOUT/STDERR will be that of its running process</li>
-<li>Docker allows you to send that stream somewhere else with log drivers</li>
+<li>STDOUT/STDERR will be that of its running process</li>
+<li>Can send that stream elsewhere with log drivers</li>
 <li>You don't have to rely on Docker logging</li>
-<li>Log aggregation services</li>
+<li>Log aggregation services FTW</li>
 </ul>
 
 </section>
@@ -675,9 +750,8 @@ latest: Pulling from nktpro/swagger-cli
 <h2>How we log?</h2>
 
 <ul>
-<li>Option 1: Every container sends its logs to aggregator</li>
-<li>Option 2: Containers send their logs to another container, which sends them
-to aggregator</li>
+<li>1: Every container sends its logs to aggregator</li>
+<li>2: Every container logs to another container which aggregates</li>
 <li>Hands for 1? 2?</li>
 </ul>
 
@@ -689,7 +763,7 @@ to aggregator</li>
 
 <ul>
 <li>We use Loggly, but it's a commodity</li>
-<li><code>rsyslog</code> container gets logs from other containers on host</li>
+<li><code>rsyslog</code> container receives from host containers</li>
 <li>Forwards over HTTPS to aggregator</li>
 </ul>
 
@@ -697,14 +771,21 @@ to aggregator</li>
 
 <section>
 
-<h2>What this enables</h2>
+<p align="center">
+  <img src="lib/images/rsyslog_to_loggly.png"
+    width="809" height="283" border="0"
+    alt="rsyslog to loggly" />
+  </p>
 
-<ul>
-  <li>Swap out logging containers...</li>
-  <li>...or tee logs to multiple aggregation services</li>
-  <li>...while containers are running, with no changes to them</li>
-  <li>(we might miss one or two messages)</li>
-</ul>
+</section>
+
+<section>
+
+<p align="center">
+  <img src="lib/images/rsyslog_tee.png"
+    width="808" height="452" border="0"
+    alt="rsyslog tee" />
+</p>
 
 </section>
 
@@ -713,9 +794,9 @@ to aggregator</li>
 <h2>Other neat things</h2>
 
 <ul>
-<li>Having all backend services on Docker means we can run on one machine</li>
-<li>Deploy different branches of many projects via Slack (and everyone does it!)</li>
-<li>Run full back-end stack on your laptop</li>
+<li>All containers on one machine</li>
+<li>Chatops: many branches many services to machine via Slack</li>
+<li>And everybody does it!</li>
 </ul>
 
 </section>
@@ -737,7 +818,7 @@ to aggregator</li>
 
 <h2>"Just" operations!</h2>
 
-<p>But it's operational stuff the way unit tests are "quality stuff"</p>
+<p>"Operational stuff" like unit tests are "quality stuff"</p>
 
 <p align="center">
   <img src="lib/images/tree_eating_machine.gif"
@@ -754,7 +835,7 @@ to aggregator</li>
 
 <p align="center">
   <img src="lib/images/we_have_bigger_problems.gif"
-    width="500" height="281" alt="All day every day" />
+    width="750" height="420" alt="All day every day" />
 </p>
 
 </section>
@@ -766,7 +847,7 @@ to aggregator</li>
 <p>That's a powerful thing indeed.</p>
 
 <p align="center">
-  <img src="lib/imates/string_cuts_knife.gif"
+  <img src="lib/images/string_cuts_knife.gif"
     width="500" height="374" alt="Powerful string!" />
 </p>
 
@@ -781,6 +862,17 @@ to aggregator</li>
 <a href="https://twitter.com/cwinters/">@cwinters</a></h3>
 
 </section>
+
+
+<section>
+  <h2>Meta</h2>
+  <ul>
+    <li><a href="https://github.com/cwinters/docker-201706">This presentation</a></li>
+    <li><a href="https://www.pghcitypaper.com/Blogh/archives/2017/03/29/wqeds-rick-sebak-launches-crowdfunding-campaign/">Source: King Rick Sebak</a></li>
+    <li><a href="https://zeroturnaround.com/rebellabs/java-build-tools-how-dependency-management-works-with-maven-gradle-and-ant-ivy/">Source: Java dependencies</a></li>
+  </ul>
+</section>
+
 
 </div>
 </div>
